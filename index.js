@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+app.get('/superpower', (req, res) => {
+    res.send('Here are all your super powers');
+})
+
 app.listen(port, () => {
     console.log('App is listening on http://localhost:' + port);
 });
