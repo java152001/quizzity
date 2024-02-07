@@ -9,6 +9,7 @@ exports.up = function (knex) {
             table.string('title', 255).notNullable();
             table.datetime('quizStart', { precision: 4 }).notNullable();
             table.integer('joinID').notNullable();
+            table.integer('userID').references('id').inTable('users');
         })
 };
 
