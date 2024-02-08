@@ -32,6 +32,7 @@ app.post('/api/quiz/create', async (req, res) => {
         const ids = await knex('quizzes').insert(quizData);
         res.status(201).json(ids);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: "Error creating new post", error: err })
     }
 })
