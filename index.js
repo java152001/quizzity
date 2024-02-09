@@ -6,7 +6,12 @@ const knexConfig = require('./quizzityDB/knexfile');
 
 const knex = require('knex')(knexConfig[process.env.NODE_ENV.trim()]);
 
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json())
+
 
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -25,6 +30,8 @@ app.post('/api/quiz/create', async (req, res) => {
     let quizData = {
         title: "Let Us Begin",
         quizStart: postData.quiz.date,
+        creationDate: new Date(),
+        rounds: postData.rounds,
         joinID: 123456
     }
 
@@ -35,14 +42,30 @@ app.post('/api/quiz/create', async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Error creating new post", error: err })
     }
+});
+
+app.get('/api/quiz/:id', async (req, res) => {
+    try {
+        const ids = await knex('quizzes')
+            .where({
+                userID: req.params.id
+            }).select(
+                'id', 'title', 'rounds'
+            );
+        
+            res.status(201).json(ids);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Error fetching quiz',  error: err })
+    }
 })
 
 app.post('/api/user/register', async (req, res) => {
     const postData = req.body;
 
     let userData = {
-        firstName: 'Anthony',
-        lastName: 'Demott',
+        firstName: postData.firstName,
+        lastName: postData.lastName,
         email: postData.email,
         password: postData.password
     }
@@ -52,7 +75,7 @@ app.post('/api/user/register', async (req, res) => {
         res.status(201).json(ids);
     } catch (err) {
         res.status(500).json({ message: "Error creating user", error: err })
-
+        console.log(err);
     }
 });
 

@@ -8,6 +8,8 @@ exports.up = function (knex) {
             table.increments('id').primary();
             table.string('title', 255).notNullable();
             table.datetime('quizStart', { precision: 4 }).notNullable();
+            table.datetime('creationDate', { precision: 4 }).notNullable();
+            table.smallint('rounds').notNullable();
             table.integer('joinID').notNullable();
             table.integer('userID').references('id').inTable('users');
         })
